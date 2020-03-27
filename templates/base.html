@@ -71,16 +71,17 @@
           </button>
         </div>
         <div class="modal-body">
-          <form>
+          <form action="login/" method="POST">
             <div class="form-group">
               <label for="loginusername">Username</label>
-              <input type="text" class="form-control" id="loginusername" name="username" placeholder="Username" Required>
+              <input type="text" class="form-control" id="loginusername" name="loginusername" placeholder="Username" Required>
             </div>
             <div class="form-group">
               <label for="pass">Password</label>
               <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter your password" Required>
             </div>
-          <button type="button" class="btn btn-primary">Submit</button>
+            {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <div class="modal-footer">
