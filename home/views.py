@@ -1,7 +1,8 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from home.models import Contact
 from django.contrib import messages
 from blog.models import Post
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
@@ -40,3 +41,34 @@ def search(request):
         messages.warning(request,'No search result found please refine your search')
     params = {'allposts':allposts , 'query':query}
     return render(request,'home\\search.html',params)
+
+def handlesignup(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+        
+        # check for correct inp
+        if len(username)>10:
+            messages.error(request,'Username should be less thank 10 characters')
+            return redirect('home')
+
+        if not username.isalnum():
+            messages.error(request,'Username should only contain letters and numbers')
+            return redirect('home')
+
+        if pass1!=pass2:
+            messages.error(request,'Your passwords does not match')
+            return redirect('home')
+        
+        myuser = User.objects.create_user(username,email,pass1)
+        myuser.first_name = fname
+        myuser.last_name = lname
+        myuser.save()
+        messages.success(request,'Your iCoder has been successfully created')
+        return redirect('home')
+    else:
+        return HttpResponse('404 - Not Found')
